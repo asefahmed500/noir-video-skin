@@ -10,10 +10,6 @@ export const LOCAL_POSTER_URL = '/media/poster.jpg';
 export const MUX_PLAYBACK_ID =
   import.meta.env.VITE_MUX_PLAYBACK_ID ?? 'pLNSZ9Ng0217QWsAa004fs3hEiKdCVVON2Wd02pVjTeS8U';
 
-/** Mux text track carrying the asset's generated English captions. */
-export const MUX_CAPTIONS_TRACK_ID =
-  import.meta.env.VITE_MUX_CAPTIONS_TRACK_ID ?? 'CG0297022thmxFt5SJxYlwlCT6spRRxv02gkeMiArUbGZrUAPxAGaidgQ';
-
 export const MUX_STREAM_URL = `https://stream.mux.com/${MUX_PLAYBACK_ID}.m3u8`;
 
 /** Playback rates offered by the speed control and the settings menu. */
