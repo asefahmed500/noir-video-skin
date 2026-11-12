@@ -1,0 +1,522 @@
+/* ==========================================================================
+   NOIR skin — the frame
+   The player is a mounted print: a white sheet holding the picture, with the
+   controls laid across the bottom edge like a drafting strip.
+   ========================================================================== */
+
+.noir {
+  --noir-pad: 18px;
+  --noir-sheet-h: 79px;
+
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  background: #0b0b0b;
+  border: 1px solid var(--rail);
+  border-radius: var(--r-image);
+  container-type: inline-size;
+  isolation: isolate;
+}
+
+.noir:fullscreen {
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+}
+
+.noir-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #0b0b0b;
+}
+
+/* --- Poster ------------------------------------------------------------ */
+
+.noir-poster {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.noir-poster:not([data-visible]) {
+  display: none;
+}
+
+.noir-poster__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- Scrim ------------------------------------------------------------- */
+
+.noir-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.3), rgb(0 0 0 / 0) 42%);
+  opacity: 1;
+  transition: opacity var(--dur-slow) var(--ease);
+}
+
+.noir-scrim:not([data-visible]) {
+  opacity: 0;
+}
+
+/* --- Controls surface -------------------------------------------------- */
+
+.noir-controls {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* --- Sheet header ------------------------------------------------------ */
+
+.noir-spec {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 5px 9px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  pointer-events: none;
+  background: rgb(255 255 255 / 0.92);
+  border: 1px solid var(--rail);
+  border-radius: var(--r-tag);
+  opacity: 1;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.noir-spec__mark {
+  width: 5px;
+  height: 5px;
+  background: var(--red);
+}
+
+.noir-spec__name {
+  font-weight: 500;
+}
+
+.noir-spec__sep {
+  color: var(--ash);
+}
+
+.noir-spec__title {
+  color: var(--stone);
+}
+
+.noir-spec__title:empty {
+  display: none;
+}
+
+.noir-controls:not([data-visible]):not(:has(:focus-visible)) .noir-spec {
+  opacity: 0;
+}
+
+/* --- Oversized play control -------------------------------------------- */
+
+.noir-bigplay {
+  position: absolute;
+  top: calc(50% - var(--noir-sheet-h) / 2);
+  left: 50%;
+  z-index: 3;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+  translate: -50% -50%;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.noir-bigplay[data-paused] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.noir-bigplay__mark {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  color: var(--paper);
+  background: var(--red);
+  border-radius: var(--r-button);
+  box-shadow: 0 4px 12px -2px rgb(26 26 25 / 0.28);
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.noir-bigplay:hover .noir-bigplay__mark {
+  transform: scale(1.06);
+}
+
+.noir-bigplay:active .noir-bigplay__mark {
+  transform: scale(0.97);
+}
+
+.noir-bigplay__caption {
+  padding: 3px 9px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ink);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: rgb(255 255 255 / 0.94);
+  border-radius: var(--r-tag);
+}
+
+/* --- Buffering --------------------------------------------------------- */
+
+.noir-buffering {
+  position: absolute;
+  top: calc(50% - var(--noir-sheet-h) / 2);
+  left: 50%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--red);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.noir-buffering[data-visible] {
+  opacity: 1;
+}
+
+.noir-buffering svg {
+  animation: noir-spin 900ms linear infinite;
+}
+
+/* --- Input readouts ---------------------------------------------------- */
+
+.noir-readout {
+  position: absolute;
+  top: calc(50% - var(--noir-sheet-h) / 2);
+  left: 50%;
+  z-index: 3;
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  pointer-events: none;
+  opacity: 0;
+  translate: -50% -50%;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.noir-readout[data-open] {
+  opacity: 1;
+}
+
+.noir-readout__value {
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  background: rgb(255 255 255 / 0.94);
+  border: 1px solid var(--rail);
+  border-radius: var(--r-tag);
+  box-shadow: var(--lift-card);
+}
+
+.noir-readout__bar {
+  width: 96px;
+  height: 3px;
+  background: var(--field);
+}
+
+.noir-readout__bar::after {
+  display: block;
+  width: var(--media-slider-fill, 50%);
+  height: 100%;
+  content: '';
+  background: var(--red);
+}
+
+/* --- Error dialog ------------------------------------------------------ */
+
+.noir-error__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background: rgb(255 255 255 / 0.86);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--dur) var(--ease),
+    visibility var(--dur) var(--ease);
+}
+
+.noir-error__backdrop[data-open] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.noir-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 7;
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  width: min(440px, calc(100% - 48px));
+  padding: 24px;
+  text-align: left;
+  background: var(--paper);
+  border: 1px solid var(--rail);
+  border-radius: var(--r-card);
+  box-shadow: var(--lift-panel);
+  opacity: 0;
+  visibility: hidden;
+  translate: -50% -50%;
+  transition:
+    opacity var(--dur) var(--ease),
+    visibility var(--dur) var(--ease);
+}
+
+.noir-error[data-open] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.noir-error__mark {
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+}
+
+.noir-error__title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.33;
+  letter-spacing: -0.6px;
+}
+
+.noir-error__description {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--stone);
+}
+
+.noir-error__close {
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   Agent tour — an oversized cursor walks through every control
+   ========================================================================== */
+
+.noir-tour {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.noir-tour__cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    transform 720ms var(--ease-out),
+    opacity 220ms var(--ease-out);
+}
+
+.noir-tour--visible .noir-tour__cursor--primary {
+  opacity: 1;
+}
+
+.noir-tour__cursor--secondary {
+  opacity: 0;
+  transition:
+    transform 620ms var(--ease-out),
+    opacity 220ms var(--ease-out);
+}
+
+.noir-tour__cursor--secondary.noir-tour__cursor--visible {
+  opacity: 1;
+}
+
+.noir-tour__cursor svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.3));
+}
+
+.noir-tour__cursor-label {
+  position: absolute;
+  top: 22px;
+  left: 18px;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--red);
+  border-radius: var(--r-tag);
+  white-space: nowrap;
+  box-shadow: var(--lift-control);
+}
+
+.noir-tour__cursor-label--dark {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.noir-tour__ripple {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border: 2px solid var(--red);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: noir-ripple 620ms var(--ease-out) forwards;
+}
+
+@keyframes noir-ripple {
+  from {
+    opacity: 0.7;
+    transform: scale(0.4);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+.noir-tour__caption {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: rgb(255 255 255 / 0.96);
+  border: 1px solid var(--rail);
+  border-radius: var(--r-tag);
+  box-shadow: var(--lift-card);
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 260ms var(--ease-out),
+    transform 260ms var(--ease-out);
+}
+
+.noir-tour--visible .noir-tour__caption {
+  opacity: 1;
+  transform: none;
+}
+
+.noir-tour__replay {
+  position: absolute;
+  right: 18px;
+  bottom: calc(var(--noir-sheet-h) + 12px);
+  z-index: 9;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding-inline: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  background: rgb(255 255 255 / 0.94);
+  border: 1px solid var(--rail);
+  border-radius: var(--r-tag);
+  box-shadow: var(--lift-card);
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.noir-tour__replay:hover {
+  background: var(--paper);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* ==========================================================================
+   Narrow players — scale the chrome down rather than let it collide
+   ========================================================================== */
+
+@container (width <= 560px) {
+  .noir {
+    --noir-pad: 12px;
+    --noir-sheet-h: 68px;
+  }
+
+  .noir-bigplay__mark {
+    width: 60px;
+    height: 60px;
+  }
+
+  .noir-spec {
+    top: 10px;
+    left: 10px;
+    font-size: 10px;
+  }
+}
+
+/* A very narrow frame keeps the skin name but drops the title. */
+@container (width <= 420px) {
+  .noir-spec__sep,
+  .noir-spec__title {
+    display: none;
+  }
+}
+
+/* A large player gets a larger mark — the control scales with the frame. */
+@container (width >= 900px) {
+  .noir-bigplay__mark {
+    width: 96px;
+    height: 96px;
+  }
+
+  .noir-bigplay__caption {
+    font-size: 12px;
+    padding: 4px 11px;
+  }
+}

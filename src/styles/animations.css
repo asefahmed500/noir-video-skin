@@ -1,0 +1,98 @@
+/* ==========================================================================
+   NOIR — motion
+   Restrained by design: the picture is the event. Motion is used to mark a
+   state change, never to decorate.
+   ========================================================================== */
+
+@keyframes noir-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes noir-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes noir-draw {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* --- Scroll reveal ------------------------------------------------------ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+
+.reveal[data-visible='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal[data-delay='1'] {
+  transition-delay: 70ms;
+}
+
+.reveal[data-delay='2'] {
+  transition-delay: 140ms;
+}
+
+.reveal[data-delay='3'] {
+  transition-delay: 210ms;
+}
+
+/* The line that draws itself under a section heading. */
+.rule-draw {
+  transform-origin: left center;
+}
+
+.rule-draw[data-visible='true'] {
+  animation: noir-draw 700ms var(--ease-out) both;
+}
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  /* The spinner stops turning but stays legible. */
+  .noir-buffering svg {
+    animation: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
